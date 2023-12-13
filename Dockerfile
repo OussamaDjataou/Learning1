@@ -3,4 +3,4 @@ WORKDIR /app
 COPY . /app
 RUN pip install -r requirements.txt
 EXPOSE 4000
-CMD ["python", "-m", "flask", "--app", "./main.py", "run"]
+CMD ["python","./main.py"]

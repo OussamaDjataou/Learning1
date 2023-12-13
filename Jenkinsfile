@@ -2,8 +2,8 @@ pipeline {
     agent { 
         node {
             label 'docker-agent-python'
-            }
-      }
+        }
+    }
     triggers {
         pollSCM '* * * * *'
     }
@@ -12,8 +12,12 @@ pipeline {
             steps {
                 echo "Building.."
                 sh '''
-                cd myapp
+                cd DOCKER
                 pip install -r requirements.txt
+                # Install Docker
+                curl -fsSL https://get.docker.com -o get-docker.sh
+                sh get-docker.sh
+                rm get-docker.sh
                 '''
             }
         }
@@ -21,9 +25,8 @@ pipeline {
             steps {
                 echo "Testing.."
                 sh '''
-                cd myapp
-                python3 hello.py
-                python3 hello.py --name=Brad
+                cd DOCKER
+                python3 main.py
                 '''
             }
         }
@@ -31,7 +34,11 @@ pipeline {
             steps {
                 echo 'Deliver....'
                 sh '''
-                echo "doing delivery stuff.."
+                cd DOCKER
+                # Build Docker image
+                docker build -t oussamadjataou/test:latest -f Dockerfile .
+                # Push Docker image to DockerHub
+                docker push oussamadjataou/test:latest
                 '''
             }
         }
