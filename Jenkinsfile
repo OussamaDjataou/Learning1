@@ -12,10 +12,10 @@ pipeline {
             steps {
                 echo "Building.."
                 sh '''
-                pip install -r requirements.txt
-                curl -fsSL https://get.docker.com -o get-docker.sh
-                sh get-docker.sh
-                rm get-docker.sh
+                apk update
+                apk add docker docker-compose
+                rc-update add docker default
+                /etc/init.d/docker start
                 '''
             }
         }
